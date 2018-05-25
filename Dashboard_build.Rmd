@@ -1,0 +1,88 @@
+---
+title: "Title"
+author: "Stephen Synchronicity"
+date: '`r format(Sys.time(), "%Y-%m-%d")`'
+always_allow_html: yes
+header-includes:
+   - \usepackage{dcolumn}
+output: 
+  html_document: 
+    self_contained: yes
+    css: C:\Users\Stephen\Documents\R\win-library\3.4\neuhwk\rmarkdown\templates\DA5030\resources\bootstrap.min.css
+    highlight: zenburn
+    keep_md: no
+    theme: spacelab
+    toc: TRUE
+    toc_float: TRUE
+    df_print: paged
+    code_folding: hide
+---
+```{r setup, include=FALSE}
+# Knitr Options
+knitr::opts_chunk$set(echo = TRUE, message=FALSE,warning=FALSE,cache=TRUE, fig.align='center', fig.height=5, fig.width=8, tidy=TRUE, tidy.opts=list(width.cutoff=80))
+library(knitr)
+knit_print.data.frame = function(x, ...) {
+    res = paste(c("", "", kable(x)), collapse = "\n")
+    asis_output(res)
+}
+options(scipen=12)
+# Attach dependencies
+rmarkdown::html_dependency_jquery()
+rmarkdown::html_dependency_bootstrap("spacelab")
+rmarkdown::html_dependency_jqueryui()
+# Make reproducible
+set.seed(1)
+# Load packages
+req.packages <- c("tidyverse","dplyr","htmltools","magrittr")
+startPkgs <- Vectorize(FUN=function(pkg){suppressPackageStartupMessages(library(pkg,character.only = T))})
+startPkgs(req.packages)
+source("~/R/Scripts/DataExploration.R")
+```
+```{r 'Use Chunk Titles to add Bold Headings to Chunks',echo=F,eval=F}
+source("~/R/Scripts/addChunkTitles.R")
+rmd <- addChunkTitles(rstudioapi::getSourceEditorContext()$path)
+write(rmd,file=(rstudioapi::getSourceEditorContext()$path))
+```
+
+# Overview
+<p>The proposed template for the functionality can be viewed in this <a href="https://drive.google.com/open?id=1qQ88NgJNhbMgiVAYEGrdZM45PsV-lC1o">sketch</a>. The functionality is threefold at present:</p>
+
+## Center Management Dashboard 
+
+### <em>Graph 1:</em>
+<ol>
+    <li>The line graph is the number of students applying for a course</li>
+    <li>The AUC (area-under-curve) is split by color binned by selectable unit of time into bar graphs indicating the ratio of old students/new students per unit time</li>
+    <li>A linear model is binned by selectable unit of time that results in splines regressing on the given time in the bin. The spline for that season is intended to show the # of students applying regressed on unit time and cost, donations, or electricity <em>Upon re-examining this graph, it will make more sense to separate these metrics into two graphs. The 2nd graph should have the # of students applying with the bar split of os/ns with splined regression by selectable unit time with the variable closing date based on mean prediction of two regression lines 
+        <ul>
+             <li>applications per unit time since first application for retreat </li>
+             <li>applications in the past week </li>
+         </ul>
+         This will provide the basis for a moving "expected date of close" estimate to provide a guideline for old students intent on attending the course as to when they will need to have the application completed by to avoid being waitlisted. This could also be paired with an automatic email notification feature when the proposed close date reaches 1 week etc.</em></li>
+</ol>
+
+### <em>Graph 2</em>
+<p>Graph 2 will provide a statistical overview of various metric per student across a given time period. Default time bins will be seasons, with adjustments of quarters, months, weeks, days. The graph will have y-axis as the # of students, and x-axis as the date. Stacked bar graphs will show the number of os v ns per retreat across the duration of the retreat. These can be regressed against electricity cost, food cost, donations to establish an amount per student per given time period. Such a graph can provide prospective insights into the fluctuation in these variables across seasons and allow for seasonal comparisons as well as annual projections. A graph over a longer period of time can show the growth of center of time, whether that be linear, exponential or otherwise.</p>
+
+## Ride Suggestion
+<p>A ride suggestion algorithm can be created with KNN (k nearest neighbors) and the Google Maps API. The application process can be modified to include inputs for:
+<ul>
+     <li>Their location of departure</li>
+     <li>An optional checkbox to select "offering a ride" or "needing a ride"</li>
+     <li>If offering a ride is selected, the following appear: <ul>
+         <li>a date of departure selection dialog</li>
+         <li># of seats available (taking into account luggage of each traveler)</li>
+     </ul> </li>
+ </ul> 
+ <p>With this information, the OpenMaps API can then be queried to provide an inline user selection (with PHP) of the latitude and longitude of that location. Because kNN is directionally indifferent, we need to create a custom algorithm to find the individuals that are closest to the driver's path to the center. To do so we will need to compute the distance of parallel lines between the rider's origin point $r_{la},r_{lo}$ and the vector between the driver's origin and the center $\vec{d_{oc}}$ for a rough estimate of whom will be closest to the path of travel. We can determine which riders will be encompassed in a query for a drive by finding the bisecting half way point $distance(\vec{d_{oc}})/2$ on the direction vector from the driver origin to center, and creating a circular radius equivalent to half the distance of the journey with an overlapping sphere of 10 mile radius from their point of origin (a driver would likely be willing to pick up someone with 10 miles even if in the opposite direction). </p>
+<em>Exceptions</em>
+ <p>However, exceptions might occur where a person resides just outside of a 10 mile radius but also in the same large city, and would be willing to take a Lyft or public transportation to reach the driver. To account for such exceptions, a regex matching system based on city name would be helpful to identify and match these exceptions.</p>
+<ol>
+     <li>Time to the center (1 query)</li>
+     <li>Time to the center with each of the nearest neighbors (3 Queries)</li>
+ </ol> . </p>
+
+```{r ''}
+
+```
+
